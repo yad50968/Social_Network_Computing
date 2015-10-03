@@ -1,0 +1,10 @@
+101062206 劉子源 Lab1-2
+
+I use nltk library to count the number of words
+
+Problem:
+
+1. how to let nltk know there is a \n ,so it will not count it together
+so I check where is \n and add the word there.
+
+2. how to count 4,5-words  :  I finally found the ngrams() and solve easily

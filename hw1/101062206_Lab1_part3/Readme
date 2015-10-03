@@ -1,0 +1,9 @@
+101062206 劉子源 Lab1-3
+
+I use BeautifulSoup to parser the html.
+And there is only one problem I encounted.
+
+That is I don't know how to get the string from soup.findAll()
+after loop up lots of website, I found the answer:   use strip()
+
+

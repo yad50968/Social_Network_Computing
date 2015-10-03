@@ -2,11 +2,12 @@ var id = 1; // unique id for list items
 
 $(document).ready(function(e) {
 	
-
+	// click the remove 
 	$("tbody").on("click", ".cross", function() {
 		$(this).closest("tr").remove();
 	});
 
+	// click the itme 
 	$("tbody").on("click", ".content", function() {
 		var tdObj = $(this); 
 	 	var text = tdObj.text();
@@ -14,6 +15,9 @@ $(document).ready(function(e) {
 	 	inputObj.val(tdObj.text());  
 	    tdObj.html(""); 
 
+	    // click the item 
+	    // and append a input on origin span
+	    // user can edit the content
 	    inputObj.appendTo(tdObj);  
 	    inputObj.trigger("focus").trigger("select");
 	    inputObj.click(function() { 
@@ -32,8 +36,10 @@ $(document).ready(function(e) {
  
 	});
 
+	// click the add
 	$("#add").on("click", getInput);
 
+	// click the delete all
 	$("#deleteall").on("click", deleteall);
 
 	$("tbody").on("click", ".box", function() {
