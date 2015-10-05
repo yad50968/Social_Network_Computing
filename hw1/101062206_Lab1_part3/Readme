@@ -6,4 +6,8 @@ And there is only one problem I encounted.
 That is I don't know how to get the string from soup.findAll()
 after loop up lots of website, I found the answer:   use strip()
 
+and when I parse the content , it should x.string.strip() to get the content
+because there are some pictures url , and it will get trouble.
+so I use x.string and get the content.
+
 
