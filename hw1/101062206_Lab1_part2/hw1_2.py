@@ -54,3 +54,6 @@ print('----Top five 4-words sequences\n')
 doit(string,4)
 print('----Top five 5-words sequences\n')
 doit(string,5)
+
+file.close()
+
