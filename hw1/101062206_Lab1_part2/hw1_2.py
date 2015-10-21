@@ -23,7 +23,7 @@ def doit(string,i):
 			str += ' '
 		print(str,b)
 		str = ''
-	print('\n')
+	print('\n')))
 	dictionary.clear() 
 
 
