@@ -1,0 +1,201 @@
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>	
+<link rel="stylesheet" href="./fancybox/source/jquery.fancybox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="./index.css">
+<script type="text/javascript" src="./fancybox/source/jquery.fancybox.js" ></script>
+	<title>HW3</title>
+<style type="text/css">
+
+	#tfheader{
+		background-color:#c3dfef;
+	}
+	#tfnewsearch{
+		float:right;
+		padding:20px;
+	}
+	.tftextinput{
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		border:1px solid #0076a3; border-right:0px;
+		border-top-left-radius: 5px 5px;
+		border-bottom-left-radius: 5px 5px;
+	}
+	.tfbutton {
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		outline: none;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		border: solid 1px #0076a3; border-right:0px;
+		background: #0095cd;
+		background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+		background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+		border-top-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+	}
+	.tfbutton:hover {
+		text-decoration: none;
+		background: #007ead;
+		background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+		background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+	}
+	/* Fixes submit button height problem in Firefox */
+	.tfbutton::-moz-focus-inner {
+	  border: 0;
+	}
+	.tfclear{
+		clear:both;
+	}
+</style>
+</head>
+<body background="./background.jpg">
+
+
+<div class="top-bar" style='z-index:2' position="fixed">
+<div id="tfheader ">
+		<form id="tfnewsearch" onsubmit="return false" >
+		        <input type="text" id="tag" class="tftextinput"  size="21" maxlength="120" onkeypress="keypress()">
+		        <input type="button" value="search" class="tfbutton" onclick=dosearch()>
+		</form>
+		<div class="tfclear"></div>
+</div>
+</div>
+
+<div class="row"  style="z-index: 1" >
+	<div class="col" id="column">
+		<div id="my-gallery" 
+			class="list"
+			data-thumbnail-width="200"
+			data-thumbnail-height="200"
+			data-thumbnail-resize="trim"
+		>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+var apikey = "a2a09a32876889b64b9b030d5362b18e";
+
+function dosearch(){
+	$(".list").empty();
+	
+	var flickrAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+apikey+"&format=json&tags="+document.getElementById("tag").value+"&jsoncallback=?";
+	
+	var output="";
+	$.getJSON(flickrAPI, function(data) { 
+	    if (data.stat == 'ok') {
+	        result = data.photos.photo;
+	        for (var i = 0; i < result.length; i++) {
+	        	dogettag(result[i]);
+	        }
+	        
+	    }
+	    else {
+	        result = null;
+	    } 
+
+	});
+}
+
+
+
+function dogettag(result){
+		$.ajax({
+		        type: "get",
+		        url: 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&format=json&api_key='+ apikey + '&photo_id=' + result.id + '&jsoncallback=?',
+		        dataType: 'json',
+		        success: function(data) {
+		            if (data.stat == 'ok') {
+				        result = data.photo;
+				       	var output="";
+
+				       	output = output + RemoveHTML(result.title._content) +':';
+				       	output = output + RemoveHTML(result.description._content) +':';
+				        var tags = result.tags.tag;
+				        for(var i = 0; i < tags.length; i++) {
+
+				        	output = output +' '+ RemoveHTML(tags[i]._content) + ' ';
+				        }
+				        doaddcontent(result,output);
+		        	}
+		        },
+			    error: function() {
+			            alert('Error occured');
+		   		}
+		});
+}
+
+function doaddcontent (result,tag) {
+	var img = 'http://farm' + result.farm + '.staticflickr.com/' + result.server + '/' + result.id + '_' + result.secret + '.jpg';
+	var content = "<a class = \"fancybox\" data-fancybox-group=\"group\" style=\"display:inline\" rel=\"group\" title=\""+tag+"\" id =\""+result.id+ " href=\""+img+ "\"><img src=\""+img+"\"   ></a>";
+	$(".list").append(content);
+}
+function tagsearch(value){
+	$.fancybox.close();
+	$("#tag").val(value);
+	dosearch();
+}
+</script>
+
+
+
+</script>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("a.fancybox").fancybox({
+			afterLoad: function() {
+				titlename = this.title;
+				tmp = titlename.split(':');
+				var titlename_title = tmp[0];
+				var titlename_description = tmp[1];
+				var titlename_split = tmp[2].split(" ");
+				out = "<p>" + titlename_title + "-" + titlename_description +"</p>";
+				for(var i=0;i<titlename_split.length;i++){
+					if(titlename_split[i].length != 0 && titlename_split[i] != 'undefined')
+        				out += "<button type=\"button\" onclick=\"tagsearch('"+titlename_split[i]+"')\"> "+titlename_split[i]+"</button>";
+				}
+        		this.title = out;
+    		},
+			helpers : {
+	            title : {
+	                type: 'outside'
+	            }	
+        	},
+        	'afterClose': function() {
+ 			   $("a.fancybox").show();
+			},
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200,
+			'width' : 800,
+			'height': 600,
+		});
+
+	});
+
+function RemoveHTML( strText ) {
+
+    var regEx = /<[^>]*>/g;
+
+    return strText.replace(regEx, "");
+
+}
+function keypress(){
+	if(event.keyCode == 13 && document.getElementById("tag").value!= ""){
+		dosearch();
+	}
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+101062206 劉子源  hw3
+
+
+這次作業使用  fancybox 作為燈箱效果
+
+程式執行的步驟為：
+1. 輸入要搜尋的值  透過按enter 或是  滑鼠點選執行
+2. 把值傳給 dosearch()  dosearch()會去取得所有圖片  然後將所有圖片傳給 dogettag()
+3. 在dogettag() 會去找出所有圖片的所有tag title 以及 description 
+	並且 排成 title:description:tag1 tag2 tag3 .... 之後傳給 doaddcontent()
+4. doaddcontent會把dogettag傳過來的字串 加入要顯示出來的列表的title
+5. 當使用者打開圖片時 fancybox 會去執行 afterLoad() 裡面的function  將所點選的照片中的title拿出來
+ 	並且解析出當初放在一起的 title description tag  然後重新組成新的樣式
+
+
+遇到問題：
+
+最主要問題是一開始找尋可以用的燈箱jq
+以及搞懂如何使用fancybox 
+其他部份可能就是尚未不太熟悉js 跟jq用法

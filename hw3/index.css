@@ -1,0 +1,33 @@
+.row {
+    
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.col {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.list a {
+    text-decoration: none;
+}
+
+.list a img {
+    max-width: 200px;
+    background: white;
+    border: solid 1px #ddd;
+    padding: 4px;
+    margin: 10px;
+    -webkit-transition: 0.3s all;
+    transition: 0.3s all;
+}
+
+.list a:hover img {
+    border-color: #c8c8c8;
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+}
