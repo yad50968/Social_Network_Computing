@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Scrolling Nav - Start Bootstrap Template</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="../static/javascripts/js-cookie-master/src/js.cookie.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/javascripts/bootstrap_result/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/javascripts/bootstrap_result/css/scrolling-nav.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Start Bootstrap</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a class="page-scroll" href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="list" class="list-group">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>About Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Services Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Contact Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="../static/javascripts/bootstrap_result/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/javascripts/bootstrap_result/js/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="../static/javascripts/bootstrap_result/js/jquery.easing.min.js"></script>
+    <script src="../static/javascripts/bootstrap_result/js/scrolling-nav.js"></script>
+<script type="text/javascript">
+    
+    var list = [];
+    var url_list = [];
+    var like_list = [];
+    var all_list = [];  
+    function get_command(){
+    
+            $("#list2").empty();
+            FB.api('/'+"{{post_id}}"+'/comments',function(response) {
+                if (response && !response.error) {
+                
+                    var data = response.data;
+                    addtolist(data);    
+                }
+            });
+    
+    }
+
+    function addtolist(data){
+        var len = data.length;
+        for(var i=0;i<len;i++){
+            data_array = [data[i].from.name,data[i].from.id,data[i].id,data[i].message]
+            list.push(data_array);
+
+            
+        }
+        getuser(len);
+    }
+    function getuser(len){
+        var c = 0;
+        for(var i=0; i<len ; i++){
+            
+            FB.api('/'+list[i][1]+'/picture',function(response) {
+                if (response && !response.error) {
+                    var data = response.data.url;
+                    
+                    url_list.push(data);
+                    c++;
+                    if(c==len){
+                        getlikecount(len);
+                    }
+                }
+
+            });
+        }
+    }
+
+    function getlikecount(len){
+        var c=0;
+        for(var i=0; i<len ; i++){
+            FB.api('/'+list[i][2]+'/likes',function(response) {
+                
+                if (response && !response.error) {
+                    
+                    var data = response.data;
+                    like_list.push(data.length);
+                    c++;
+                    if(c==len){
+                        add_all(len);
+                    }
+                }
+
+            });
+        }
+    }
+
+    function add_all(len){
+        for(var i =0; i <len ; i++){
+            all_list.push([list[i],url_list[i],like_list[i]]);
+        }
+        do_sort_by_like(len);
+    }
+
+    function do_sort_by_like(len){
+        all_list.sort(sortfunction);
+        do_append_to_web(len);
+    }
+    function sortfunction(a,b){
+        return (b[2] - a[2] );
+
+    }
+    function do_append_to_web(len){
+        for(var i =0;i<len ;i++){
+            $("#list").append('<li class="list-group-item"><img src="'+all_list[i][1]+'" >'+all_list[i][0][0]+'  '+all_list[i][0][3]+' <span class="label label-default label-pill pull-right">'+all_list[i][2]+'</span></li>');
+        }
+    }
+
+</script>
+<script>
+  // This is called with the results from from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+       
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+            get_command();
+        
+        } else {
+          // The person is not logged into Facebook, so we're not sure if
+          // they are logged into this app or not.
+          alert("login please");
+        }
+      }
+
+      // This function is called when someone finishes with the Login
+      // Button.  See the onlogin handler attached to it in the sample
+      // code below.
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '520498858112489',
+        cookie     : true,  // enable cookies to allow the server to access 
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.2' // use version 2.2
+      });
+
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+
+      };
+
+      // Load the SDK asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+</script>
+
+</body>
+
+</html>

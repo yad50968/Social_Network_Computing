@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ask</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="../static/javascripts/js-cookie-master/src/js.cookie.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/javascripts/bootstrap_result/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/javascripts/bootstrap_result/css/scrolling-nav.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="/">Home</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    
+                    <li>
+                        <a class="page-scroll" href="/result">Get Result</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div ng-app>
+					  <h3>Input Your Question!</h3>
+					  <form role="form">
+					    <div class="form-group">
+					    	<input id="content" class="form-control" ng-model="sometext" autofocus>
+					    </div>
+					    <div class="form-group">
+					    	<button id='postit' type='button' class='btn btn-primary' >Submit!</button>
+					    </div>
+					    <div id="ale" class="alert alert-success">
+						  <strong>Success!</strong> 
+						</div>
+					  </form>
+					</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+
+<script type="text/javascript">
+	$("#ale").hide();
+	var button = document.getElementById('postit');
+	button.addEventListener("click", postit);
+
+	function postit(){
+		var content = document.getElementById('content').value;
+	
+		if(content.length > 0){
+		
+			FB.api('/me/feed', 'post', {message: content} ,function(response){
+				if (!response || response.error) {
+				    alert('Error occured');
+				} else {
+
+					var c=0;
+					if(Cookies.get('count')==undefined){
+						Cookies.set('count',1);
+						c =1;
+					}else{
+						var tmp = Cookies.get('count');
+						c = parseInt(tmp)+1;
+						Cookies.set('count',c);
+
+					}
+					Cookies.set('postid'+c, response.id ,{ expires: 7 });
+					document.getElementById("content").value="";
+					$("#ale").show().fadeOut(10000);
+				}
+			});
+							
+        	
+		}
+	}
+	</script>
+    <!-- jQuery -->
+    <script src="../static/javascripts/bootstrap_result/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/javascripts/bootstrap_result/js/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="../static/javascripts/bootstrap_result/js/jquery.easing.min.js"></script>
+    <script src="../static/javascripts/bootstrap_result/js/scrolling-nav.js"></script>
+
+<script>
+      window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '520498858112489',
+        cookie     : true,  // enable cookies to allow the server to access 
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.2' // use version 2.2
+      });
+  		};
+
+
+      // Load the SDK asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+</script>
+
+</body>
+
+</html>
